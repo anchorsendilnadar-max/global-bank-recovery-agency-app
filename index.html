@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#081d36">
+<title>GBRA App V2</title>
+<style>
+:root{--nav:#081d36;--blue:#1263a0;--bg:#f4f7fb;--line:#e4e9f0;--text:#172033;--muted:#6b7280}
+*{box-sizing:border-box}body{margin:0;background:#e9eef5;font-family:Arial,sans-serif;color:var(--text)}
+.app{max-width:480px;margin:auto;min-height:100vh;background:var(--bg);padding-bottom:76px}
+.top{background:linear-gradient(140deg,#06172c,#1467a5);color:#fff;padding:22px 18px 24px;border-radius:0 0 28px 28px}
+.row{display:flex;align-items:center;gap:12px}.logo{width:54px;height:54px;border-radius:14px;background:#fff;color:#0a3155;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:800}
+.top h1{font-size:18px;margin:0 0 4px}.tag{font-size:11px;opacity:.9}.profile{margin-top:18px;background:rgba(255,255,255,.12);padding:13px;border-radius:14px;font-size:12px}
+main{padding:18px}.title{font-size:17px;font-weight:800;margin:3px 0 13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 5px 16px rgba(19,44,75,.06)}.click{cursor:pointer}.icon{font-size:26px}.card b{font-size:13px;display:block;margin-top:8px}.small{font-size:11px;color:var(--muted);margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}.stat strong{font-size:19px;display:block}.stat span{font-size:10px;color:var(--muted)}
+.section{margin-top:19px}.case{display:flex;justify-content:space-between;gap:8px;align-items:center}.badge{font-size:10px;padding:5px 8px;border-radius:20px;background:#eaf5ff;color:#1263a0}
+button,input,textarea,select{font:inherit}input,textarea,select{width:100%;padding:12px;border:1px solid #d7dee8;border-radius:10px;margin:6px 0;background:#fff}textarea{min-height:85px;resize:vertical}
+.btn{width:100%;border:0;background:var(--blue);color:#fff;border-radius:10px;padding:12px;font-weight:700;margin-top:7px}.back{background:#eaf0f6;color:#17486e}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);height:66px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:5}.bottom div{text-align:center;font-size:10px;color:#536173;cursor:pointer}.bottom span{display:block;font-size:21px;margin-bottom:3px}
+.screen{display:none}.screen.active{display:block}.note{font-size:11px;color:#5d6878;background:#eef5fb;padding:12px;border-radius:12px;margin-top:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="row"><div class="logo">GBRA<br>LOGO</div><div><h1>Global Bank Recovery Agency</h1><div class="tag">Trust • Recovery • Results</div></div></div>
+ <div class="profile">👤 <b>Agent Portal</b><br><span style="opacity:.8">Secure recovery management — V2 Prototype</span></div>
+</header>
+
+<main>
+<section id="login" class="screen active">
+ <div class="title">Secure Login</div>
+ <div class="card">
+  <div class="small">Global Bank Recovery Agency</div>
+  <input id="loginId" placeholder="Agent ID / Admin ID">
+  <input id="loginPass" type="password" placeholder="Password">
+  <select id="role"><option value="agent">Agent</option><option value="admin">Admin</option></select>
+  <button class="btn" onclick="doLogin()">Login</button>
+  <div id="loginMsg" class="note">Prototype login: any non-empty ID/password is accepted.</div>
+ </div>
+</section>
+
+<section id="home" class="screen">
+ <div class="title">Dashboard</div>
+ <div class="card" style="margin-bottom:14px"><b id="welcome">Welcome</b><div class="small" id="roleText">Secure Agent Portal</div></div>
+ <div class="stats"><div class="stat"><strong>12</strong><span>Assigned</span></div><div class="stat"><strong>4</strong><span>Visits</span></div><div class="stat"><strong>₹0</strong><span>Updated</span></div></div>
+ <div id="adminCard" class="card click" style="display:none;margin-bottom:12px" onclick="openScreen('admin')"><div class="icon">👨‍💼</div><b>Admin Panel</b><div class="small">Manage agents and cases</div></div>
+ <div id="manageCard" class="card click" style="display:none;margin-bottom:12px" onclick="openScreen('manage')"><div class="icon">🗂️</div><b>Manage Cases</b><div class="small">Create and update cases</div></div>
+ <div class="card click" onclick="openScreen('reports')" style="margin-bottom:12px"><div class="icon">📊</div><b>Reports</b><div class="small">Visit & recovery summary</div></div>
+ <div class="grid">
+  <div class="card click" onclick="openScreen('cases')"><div class="icon">📋</div><b>My Cases</b><div class="small">View assigned cases</div></div>
+  <div class="card click" onclick="openScreen('visit')"><div class="icon">🚗</div><b>Field Visit</b><div class="small">Add visit report</div></div>
+  <div class="card click" onclick="openScreen('recovery')"><div class="icon">💰</div><b>Recovery</b><div class="small">Update collection</div></div>
+  <div class="card click" onclick="openScreen('documents')"><div class="icon">📄</div><b>Documents</b><div class="small">Company documents</div></div>
+  <div class="card click" onclick="openScreen('profile')"><div class="icon">👤</div><b>My Profile</b><div class="small">Agent information</div></div>
+  <div class="card click" onclick="openScreen('contact')"><div class="icon">📞</div><b>Contact</b><div class="small">Office support</div></div>
+ </div>
+ <div class="note">🔐 Prototype mode: no real customer information is stored. Secure backend/database will be added before production use.</div>
+</section>
+
+<section id="admin" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">Admin Panel</div>
+ <div class="stats"><div class="stat"><strong>8</strong><span>Agents</span></div><div class="stat"><strong>24</strong><span>Total Cases</span></div><div class="stat"><strong>7</strong><span>Pending</span></div></div>
+ <div class="card"><b>Assign Case</b><input placeholder="Case ID"><input placeholder="Agent ID"><button class="btn" onclick="alert('Case assignment saved in prototype mode.')">Assign Case</button></div><br>
+ <div class="card"><b>Agent Management</b><div class="small">Add, review or deactivate agents in the production backend.</div></div>
+</section>
+
+
+<section id="manage" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button>
+ <div class="title section">Case Management</div>
+ <div class="card">
+  <b>Add / Update Case</b>
+  <input id="newCaseId" placeholder="Case ID">
+  <input id="newClient" placeholder="Client / Bank name">
+  <input id="newAgent" placeholder="Agent ID">
+  <input id="newAmount" type="number" placeholder="Outstanding Amount ₹">
+  <select id="newStatus"><option>Pending</option><option>Visit Required</option><option>Follow-up</option><option>Recovered</option></select>
+  <button class="btn" onclick="saveCase()">Save Case</button>
+ </div>
+ <div class="title section">Saved Cases</div>
+ <div id="caseList"></div>
+</section>
+
+<section id="cases" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">My Cases</div>
+ <div id="myCaseList"></div>
+</section>
+
+<section id="visit" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">Field Visit Report</div>
+ <input id="vcase" placeholder="Case ID">
+ <input id="vdate" type="date">
+ <input id="vplace" placeholder="Visit location / area">
+ <textarea id="vremarks" placeholder="Visit remarks"></textarea>
+ <button class="btn" onclick="saveVisit()">Save Visit</button>
+ <div id="vmsg" class="note"></div>
+</section>
+
+
+<section id="history" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button>
+ <div class="title section">Visit & Recovery History</div>
+ <div class="title section">🚗 Field Visits</div>
+ <div id="visitHistory"></div>
+ <div class="title section">💰 Recovery Entries</div>
+ <div id="recoveryHistory"></div>
+</section>
+
+<section id="reports" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button>
+ <div class="title section">Reports</div>
+ <div class="stats">
+  <div class="stat"><strong id="reportCases">0</strong><span>Cases</span></div>
+  <div class="stat"><strong id="reportVisits">0</strong><span>Visits</span></div>
+  <div class="stat"><strong id="reportRecovery">₹0</strong><span>Recovery</span></div>
+ </div>
+ <div class="card"><b>Recovery Summary</b><div class="small" id="reportText">No recovery entries yet.</div></div>
+ <button class="btn" onclick="openScreen('history')">View Full History</button>
+</section>
+
+<section id="recovery" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">Recovery Update</div>
+ <input id="rcase" placeholder="Case ID">
+ <input id="ramount" type="number" placeholder="Recovered Amount ₹">
+ <input id="rref" placeholder="Receipt / Reference No.">
+ <select id="rstatus"><option>Part Payment</option><option>Full Recovery</option><option>Promise to Pay</option></select>
+ <button class="btn" onclick="saveRecovery()">Save Recovery</button>
+ <div id="rmsg" class="note"></div>
+</section>
+
+<section id="documents" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">Documents</div>
+ <div class="card"><b>🏢 Company Registration</b><div class="small">Company registration documents</div></div><br>
+ <div class="card"><b>📜 ISO 9001:2015</b><div class="small">ISO certificate</div></div><br>
+ <div class="card"><b>🪪 Authorized Agent ID</b><div class="small">Agent identification document</div></div>
+</section>
+
+<section id="profile" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">My Profile</div>
+ <div class="card"><b>Agent Name</b><div class="small">To be configured</div><hr><b>Agent ID</b><div class="small">To be configured</div><hr><b>Designation</b><div class="small">Authorized Recovery Agent</div></div>
+</section>
+
+<section id="contact" class="screen">
+ <button class="btn back" onclick="openScreen('home')">← Dashboard</button><div class="title section">Office Support</div>
+ <div class="card"><div class="icon">📞</div><b>Office Contact</b><div class="small">Official number will be added after confirmation.</div></div><br>
+ <div class="card"><div class="icon">💬</div><b>WhatsApp Support</b><div class="small">Official WhatsApp number will be added after confirmation.</div></div>
+</section>
+</main>
+
+<nav class="bottom">
+ <div onclick="openScreen('home')"><span>🏠</span>Home</div><div onclick="openScreen('cases')"><span>📋</span>Cases</div><div onclick="openScreen('visit')"><span>🚗</span>Visit</div><div onclick="openScreen('recovery')"><span>💰</span>Recovery</div><div onclick="openScreen('history')"><span>🕘</span>History</div><div onclick="openScreen('contact')"><span>☎️</span>Contact</div>
+</nav>
+</div>
+<script>
+function openScreen(id){
+ if(id!=='login' && !sessionStorage.getItem('gbra_login')){id='login'}
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active'); if(id==='cases'||id==='manage') renderCases(); if(id==='history') renderHistory(); if(id==='reports') renderReports(); scrollTo(0,0)
+}
+function doLogin(){
+ const id=document.getElementById('loginId').value.trim(), pass=document.getElementById('loginPass').value.trim(), role=document.getElementById('role').value;
+ const msg=document.getElementById('loginMsg');
+ if(!id||!pass){msg.textContent='⚠️ Enter ID and password.';return}
+ sessionStorage.setItem('gbra_login','1');sessionStorage.setItem('gbra_role',role);sessionStorage.setItem('gbra_id',id);
+ document.getElementById('welcome').textContent='Welcome, '+id;
+ document.getElementById('roleText').textContent=role==='admin'?'Administrator Portal':'Authorized Recovery Agent Portal';
+ document.getElementById('adminCard').style.display=role==='admin'?'block':'none'; document.getElementById('manageCard').style.display=role==='admin'?'block':'none'; renderCases();
+ openScreen('home');
+}
+function logout(){sessionStorage.clear();openScreen('login')}
+
+
+const DEFAULT_CASES=[
+ {id:"GBRA-001",client:"Bank Client",agent:"AGENT-001",amount:0,status:"Pending"},
+ {id:"GBRA-002",client:"Bank Client",agent:"AGENT-002",amount:0,status:"Visit Required"},
+ {id:"GBRA-003",client:"Bank Client",agent:"AGENT-001",amount:0,status:"Follow-up"}
+];
+function getCases(){return JSON.parse(localStorage.getItem('gbra_cases')||'null')||DEFAULT_CASES}
+function setCases(c){localStorage.setItem('gbra_cases',JSON.stringify(c))}
+function renderCases(){
+ const cases=getCases(), role=sessionStorage.getItem('gbra_role')||'agent', id=sessionStorage.getItem('gbra_id')||'';
+ const my=role==='admin'?cases:cases.filter(c=>!c.agent||c.agent===id||c.agent==='AGENT-001');
+ const box=document.getElementById('myCaseList'); if(!box)return;
+ box.innerHTML=my.length?my.map(c=>`<div class="card" style="margin-bottom:10px"><div class="case"><b>${c.id}</b><span class="badge">${c.status}</span></div><div class="small">${c.client} • Agent: ${c.agent||'Unassigned'}${c.amount?` • ₹${Number(c.amount).toLocaleString('en-IN')}`:''}</div></div>`).join(''):'<div class="note">No cases assigned.</div>';
+ const list=document.getElementById('caseList'); if(list) list.innerHTML=cases.map(c=>`<div class="card" style="margin-bottom:10px"><div class="case"><b>${c.id}</b><span class="badge">${c.status}</span></div><div class="small">${c.client} • ${c.agent||'Unassigned'} • ₹${Number(c.amount||0).toLocaleString('en-IN')}</div></div>`).join('');
+}
+function saveCase(){
+ const id=document.getElementById('newCaseId').value.trim(), client=document.getElementById('newClient').value.trim(), agent=document.getElementById('newAgent').value.trim(), amount=document.getElementById('newAmount').value, status=document.getElementById('newStatus').value;
+ if(!id||!client||!agent){alert('Please enter Case ID, Client/Bank and Agent ID.');return}
+ const cases=getCases(); const i=cases.findIndex(c=>c.id===id); const item={id,client,agent,amount:Number(amount||0),status};
+ if(i>=0) cases[i]=item; else cases.push(item); setCases(cases); renderCases(); alert('Case saved in local storage.');
+}
+
+function getVisits(){return JSON.parse(localStorage.getItem('gbra_visits')||'[]')}
+function setVisits(x){localStorage.setItem('gbra_visits',JSON.stringify(x))}
+function getRecoveries(){return JSON.parse(localStorage.getItem('gbra_recoveries')||'[]')}
+function setRecoveries(x){localStorage.setItem('gbra_recoveries',JSON.stringify(x))}
+function saveVisit(){
+ const c=document.getElementById('vcase').value.trim(), d=document.getElementById('vdate').value, p=document.getElementById('vplace').value.trim(), r=document.getElementById('vremarks').value.trim();
+ const msg=document.getElementById('vmsg');
+ if(!c||!d){msg.textContent='⚠️ Please enter Case ID and visit date.';return}
+ const x=getVisits(); x.unshift({caseId:c,date:d,place:p,remarks:r,agent:sessionStorage.getItem('gbra_id')||'AGENT-001'}); setVisits(x);
+ msg.textContent='✅ Visit saved locally.'; renderHistory();
+}
+function saveRecovery(){
+ const c=document.getElementById('rcase').value.trim(),a=Number(document.getElementById('ramount').value||0),ref=document.getElementById('rref').value.trim(),s=document.getElementById('rstatus').value;
+ const msg=document.getElementById('rmsg');
+ if(!c||!a){msg.textContent='⚠️ Please enter Case ID and amount.';return}
+ const x=getRecoveries(); x.unshift({caseId:c,amount:a,ref,status:s,date:new Date().toISOString().slice(0,10),agent:sessionStorage.getItem('gbra_id')||'AGENT-001'}); setRecoveries(x);
+ msg.textContent='✅ Recovery update saved locally.'; renderHistory(); renderReports();
+}
+function renderHistory(){
+ const v=getVisits(), r=getRecoveries();
+ const vb=document.getElementById('visitHistory'), rb=document.getElementById('recoveryHistory');
+ if(vb) vb.innerHTML=v.length?v.map(x=>`<div class="card" style="margin-bottom:10px"><b>${x.caseId} • ${x.date}</b><div class="small">${x.place||'Location not entered'} • ${x.agent}</div><div class="small">${x.remarks||'No remarks'}</div></div>`).join(''):'<div class="note">No visits recorded.</div>';
+ if(rb) rb.innerHTML=r.length?r.map(x=>`<div class="card" style="margin-bottom:10px"><b>${x.caseId} • ₹${x.amount.toLocaleString('en-IN')}</b><div class="small">${x.status} • ${x.date} • ${x.agent}</div><div class="small">${x.ref?'Ref: '+x.ref:''}</div></div>`).join(''):'<div class="note">No recovery entries recorded.</div>';
+}
+function renderReports(){
+ const cases=getCases(), visits=getVisits(), rec=getRecoveries(), total=rec.reduce((s,x)=>s+Number(x.amount||0),0);
+ const a=document.getElementById('reportCases'),b=document.getElementById('reportVisits'),c=document.getElementById('reportRecovery'),t=document.getElementById('reportText');
+ if(a)a.textContent=cases.length;if(b)b.textContent=visits.length;if(c)c.textContent='₹'+total.toLocaleString('en-IN');
+ if(t)t.textContent=rec.length?`${rec.length} recovery entries recorded. Total recovery: ₹${total.toLocaleString('en-IN')}.`:'No recovery entries yet.';
+}
+</script>
+</body>
+</html>
+<script>
+document.addEventListener('DOMContentLoaded',function(){ renderCases(); renderHistory(); renderReports();
+ const logged=!!sessionStorage.getItem('gbra_login');
+ if(logged){
+   document.getElementById('login').classList.remove('active');
+   document.getElementById('home').classList.add('active');
+   const role=sessionStorage.getItem('gbra_role')||'agent', id=sessionStorage.getItem('gbra_id')||'User';
+   document.getElementById('welcome').textContent='Welcome, '+id;
+   document.getElementById('roleText').textContent=role==='admin'?'Administrator Portal':'Authorized Recovery Agent Portal';
+   document.getElementById('adminCard').style.display=role==='admin'?'block':'none'; document.getElementById('manageCard').style.display=role==='admin'?'block':'none'; renderCases();
+ } else {
+   document.getElementById('home').classList.remove('active');
+   document.getElementById('login').classList.add('active');
+ }
+});
+</script>
