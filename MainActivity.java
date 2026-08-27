@@ -1,39 +1,38 @@
 package com.globalbankrecoveryagency.app;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import androidx.appcompat.app.AppCompatActivity;
+public class MainActivity extends Activity {
 
-public class MainActivity extends AppCompatActivity {
-
-    private WebView web;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        web = new WebView(this);
+        webView = new WebView(this);
 
-        WebSettings settings = web.getSettings();
+        WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
 
-        web.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient());
 
-        web.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/index.html");
 
-        setContentView(web);
+        setContentView(webView);
     }
 
     @Override
     public void onBackPressed() {
-        if (web != null && web.canGoBack()) {
-            web.goBack();
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
         } else {
             super.onBackPressed();
         }
